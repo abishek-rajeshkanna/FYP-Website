@@ -1,6 +1,9 @@
 /* ── Layout ── */
 .app { min-height: 100vh; }
 
+/* Offset anchor targets so fixed nav doesn't cover them */
+[id] { scroll-margin-top: 80px; }
+
 /* ── Nav ── */
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -23,6 +26,13 @@
   transition: color 0.2s;
 }
 .nav-links a:hover { color: var(--accent-2); }
+.nav-link-btn {
+  background: none; border: none; cursor: pointer; padding: 0;
+  color: var(--text-muted); font-family: var(--font);
+  font-size: 0.85rem; font-weight: 500; letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+.nav-link-btn:hover { color: var(--accent-2); }
 
 /* ── Hero ── */
 .hero {
@@ -31,6 +41,10 @@
   text-align: center; padding: 6rem 2rem 4rem;
   position: relative; overflow: hidden;
 }
+.hero > *:not(.hero-grid):not(.hero-glow) {
+  position: relative;
+  z-index: 1;
+}
 .hero-grid {
   position: absolute; inset: 0;
   background-image:
@@ -38,6 +52,7 @@
     linear-gradient(90deg, rgba(56,139,253,0.04) 1px, transparent 1px);
   background-size: 60px 60px;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+  pointer-events: none;
 }
 .hero-glow {
   position: absolute; top: 20%; left: 50%; transform: translateX(-50%);

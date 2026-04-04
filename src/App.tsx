@@ -14,6 +14,10 @@ import Footer from './components/Footer'
 
 export type LightboxImg = string | null
 
+function scrollTo(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
 export default function App() {
   const [lightbox, setLightbox] = useState<LightboxImg>(null)
 
@@ -24,11 +28,11 @@ export default function App() {
           Intelligent traffic Signalling with Lane Change for Emergency Vehicles
         </div>
         <ul className="nav-links">
-          <li><a href="#overview">Overview</a></li>
-          <li><a href="#drl">DRL-PPO</a></li>
-          <li><a href="#marl">MARL Signal</a></li>
-          <li><a href="#gallery">Screenshots and Output</a></li>
-          <li><a href="#metrics">Results</a></li>
+          <li><button className="nav-link-btn" onClick={() => scrollTo('overview')}>Overview</button></li>
+          <li><button className="nav-link-btn" onClick={() => scrollTo('drl')}>DRL-PPO</button></li>
+          <li><button className="nav-link-btn" onClick={() => scrollTo('marl')}>MARL Signal</button></li>
+          <li><button className="nav-link-btn" onClick={() => scrollTo('gallery')}>Screenshots and Output</button></li>
+          <li><button className="nav-link-btn" onClick={() => scrollTo('metrics')}>Results</button></li>
         </ul>
       </nav>
 

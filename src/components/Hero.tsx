@@ -4,8 +4,13 @@ import { ArrowDown } from 'lucide-react'
 const fade = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] },
+  transition: { duration: 0.6, delay, ease: 'easeOut' },
 })
+
+function scrollTo(id: string) {
+  const el = document.getElementById(id)
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 
 export default function Hero() {
   return (
@@ -30,12 +35,12 @@ export default function Hero() {
       </motion.p>
 
       <motion.div className="hero-cta" {...fade(0.4)}>
-        <a href="#drl" className="btn-primary">
+        <button onClick={() => scrollTo('drl')} className="btn-primary">
           Explore Models <ArrowDown size={16} />
-        </a>
-        <a href="#metrics" className="btn-secondary">
+        </button>
+        <button onClick={() => scrollTo('metrics')} className="btn-secondary">
           View Results
-        </a>
+        </button>
       </motion.div>
 
       <motion.div className="hero-stats" {...fade(0.5)}>
