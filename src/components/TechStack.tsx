@@ -3,8 +3,7 @@ import { useInView } from '../hooks/useInView'
 
 const stack = [
   { name: 'PyTorch', color: '#f78166' },
-  { name: 'SUMO', color: '#388bfd' },
-  { name: 'TraCI', color: '#3fb950' },
+  { name: 'PyGame', color: '#388bfd' },
   { name: 'NumPy', color: '#bc8cff' },
   { name: 'Pandas', color: '#e3b341' },
   { name: 'Matplotlib', color: '#388bfd' },
@@ -14,6 +13,7 @@ const stack = [
   { name: 'CTDE', color: '#e3b341' },
   { name: 'Python 3.10+', color: '#388bfd' },
   { name: 'CUDA', color: '#3fb950' },
+  { name: 'V2X / TraCI', color: '#f78166' },
 ]
 
 export default function TechStack() {

@@ -1,27 +1,12 @@
 import { motion } from 'framer-motion'
 import { useInView } from '../hooks/useInView'
-
-const junctions = ['J0', 'J1', 'J2', 'J3', 'J4', 'J5']
-const junctionSubs = ['2 neighbors', '3 neighbors', '2 neighbors', '2 neighbors', '3 neighbors', '2 neighbors']
+import SignalArchDiagram from './SignalArchDiagram'
 
 const stateFields = [
-  { label: 'Queue counts (4 lanes)', fields: ['q_lane0', 'q_lane1', 'q_lane2', 'q_lane3'], color: 'blue' },
+  { label: 'Queue counts (4 lanes)', fields: ['q_north', 'q_south', 'q_east', 'q_west'], color: 'blue' },
   { label: 'Current phase', fields: ['phase'], color: 'purple' },
   { label: 'Neighbor phases (×2)', fields: ['neighbor_phase_0', 'neighbor_phase_1'], color: 'green' },
   { label: 'EV proximity', fields: ['ev_distance'], color: 'orange' as 'blue' | 'green' | 'purple' },
-]
-
-const mappoParams = [
-  { key: 'n_agents', val: '6' },
-  { key: 'state_dim', val: '8' },
-  { key: 'action_dim', val: '2' },
-  { key: 'gamma', val: '0.99' },
-  { key: 'lambda (GAE)', val: '0.95' },
-  { key: 'clip', val: '0.2' },
-  { key: 'ppo_epochs', val: '4' },
-  { key: 'batch_size', val: '64' },
-  { key: 'entropy_coef', val: '0.01' },
-  { key: 'critic_input', val: '6 × 8 = 48' },
 ]
 
 export default function MARLSection() {
@@ -37,9 +22,10 @@ export default function MARLSection() {
         <div className="section-label">Model 2</div>
         <h2 className="section-title">MARL — Multi-Agent Signal Control</h2>
         <p className="section-desc">
-          Six traffic signal agents operate under the Centralized Training, Decentralized
-          Execution (CTDE) paradigm. Each agent observes only its local state but a shared
-          critic sees the full global state during training.
+          Four traffic signal agents control a cross-junction (+) network under the
+          Centralized Training, Decentralized Execution (CTDE) paradigm. Each agent
+          observes only its local 8-dimensional state while a shared centralized critic
+          evaluates the global joint state during training.
         </p>
       </motion.div>
 
@@ -51,14 +37,23 @@ export default function MARLSection() {
       >
         {/* Junction topology */}
         <div className="marl-topology">
-          <div className="topology-title">2 × 3 Junction Grid Topology</div>
-          <div className="junction-grid">
-            {junctions.map((j, i) => (
-              <div className="junction" key={j}>
-                {j}
-                <span className="junction-sub">{junctionSubs[i]}</span>
+          <div className="topology-title">Cross-Junction (+) Topology — 4 Signal Agents</div>
+          <div className="plus-junction">
+            <div className="plus-row plus-top"><div className="plus-road v" /></div>
+            <div className="plus-row plus-mid">
+              <div className="plus-road h" />
+              <div className="plus-center">
+                <div className="plus-signal n"><span>N</span></div>
+                <div className="plus-signal-row">
+                  <div className="plus-signal w"><span>W</span></div>
+                  <div className="plus-core" />
+                  <div className="plus-signal e"><span>E</span></div>
+                </div>
+                <div className="plus-signal s"><span>S</span></div>
               </div>
-            ))}
+              <div className="plus-road h" />
+            </div>
+            <div className="plus-row plus-bot"><div className="plus-road v" /></div>
           </div>
           <div style={{ marginTop: '1.5rem' }}>
             <div className="state-group-label" style={{ marginBottom: '0.75rem' }}>Per-Agent State — 8 dimensions</div>
@@ -77,46 +72,27 @@ export default function MARLSection() {
           </div>
         </div>
 
-        {/* Reward + params */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div className="reward-breakdown">
-            <div className="topology-title">Reward Function</div>
-            <div className="reward-formula">
-              R = <span className="neg">- queue</span>{' '}
-              <span className="neg">- 0.5 × wait</span>{' '}
-              <span className="pos">+ 3 × ev_speed</span>{' '}
-              <span className="neg">- 5 × ev_delay</span>
-            </div>
-            <div className="reward-items">
-              {[
-                { sign: '-', color: 'neg', text: 'Total halting vehicles across all lanes' },
-                { sign: '-', color: 'neg', text: '0.5 × cumulative lane waiting time' },
-                { sign: '+', color: 'pos', text: '3 × current EV speed (reward fast passage)' },
-                { sign: '-', color: 'neg', text: '5 × EV speed deficit below 50 km/h' },
-              ].map((r, i) => (
-                <div className="reward-item" key={i}>
-                  <span className={`reward-item-sign ${r.color}`}>{r.sign}</span>
-                  <span className="reward-item-text">{r.text}</span>
-                </div>
-              ))}
-            </div>
+        {/* Reward */}
+        <div className="reward-breakdown">
+          <div className="topology-title">Reward Function</div>
+          <div className="reward-formula">
+            R = <span className="neg">- queue</span>{' '}
+            <span className="neg">- 0.5 × wait</span>{' '}
+            <span className="pos">+ 3 × ev_speed</span>{' '}
+            <span className="neg">- 5 × ev_delay</span>
           </div>
-
-          <div className="arch-panel">
-            <div className="arch-panel-header">
-              <div className="arch-panel-dot blue" />
-              <div className="arch-panel-title">MAPPO HYPERPARAMETERS</div>
-            </div>
-            <div className="arch-panel-body">
-              <div className="params-list">
-                {mappoParams.map(p => (
-                  <div className="param-row" key={p.key}>
-                    <span className="param-key">{p.key}</span>
-                    <span className="param-val">{p.val}</span>
-                  </div>
-                ))}
+          <div className="reward-items">
+            {[
+              { sign: '-', color: 'neg', text: 'Total halting vehicles across all lanes' },
+              { sign: '-', color: 'neg', text: '0.5 × cumulative lane waiting time' },
+              { sign: '+', color: 'pos', text: '3 × current EV speed (reward fast passage)' },
+              { sign: '-', color: 'neg', text: '5 × EV speed deficit below desired speed' },
+            ].map((r, i) => (
+              <div className="reward-item" key={i}>
+                <span className={`reward-item-sign ${r.color}`}>{r.sign}</span>
+                <span className="reward-item-text">{r.text}</span>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </motion.div>
@@ -132,7 +108,7 @@ export default function MARLSection() {
           <div className="arch-panel">
             <div className="arch-panel-header">
               <div className="arch-panel-dot blue" />
-              <div className="arch-panel-title">DECENTRALIZED ACTORS (×6)</div>
+              <div className="arch-panel-title">DECENTRALIZED ACTORS (×4)</div>
             </div>
             <div className="arch-panel-body">
               <div className="network-diagram">
@@ -163,7 +139,7 @@ export default function MARLSection() {
                 </div>
                 <div className="param-row">
                   <span className="param-key">Execution</span>
-                  <span className="param-val">Independent (no comm)</span>
+                  <span className="param-val">Independent (no inter-agent comm)</span>
                 </div>
               </div>
             </div>
@@ -177,9 +153,9 @@ export default function MARLSection() {
             <div className="arch-panel-body">
               <div className="network-diagram">
                 {[
-                  { label: 'Global State', bar: 'input', text: 'concat all 6 agents = 48-dim', size: '48' },
+                  { label: 'Global State', bar: 'input', text: 'concat all 4 agents = 32-dim', size: '32' },
                   { label: '', arrow: true },
-                  { label: 'Hidden 1', bar: 'h1', text: 'Linear(48→128) → ReLU', size: '128' },
+                  { label: 'Hidden 1', bar: 'h1', text: 'Linear(32→128) → ReLU', size: '128' },
                   { label: '', arrow: true },
                   { label: 'LayerNorm', bar: 'h2', text: 'LayerNorm(128)', size: '128' },
                   { label: '', arrow: true },
@@ -211,6 +187,21 @@ export default function MARLSection() {
             </div>
           </div>
         </div>
+      </motion.div>
+
+      {/* Signal Control Architecture Diagram */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        style={{ marginTop: '3rem' }}
+      >
+        <div className="section-label">Module Architecture</div>
+        <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem' }}>Signal Control Module Architecture</h3>
+        <p className="section-desc" style={{ marginBottom: 0 }}>
+          End-to-end architecture from data acquisition through state representation to the MAPPO training core.
+        </p>
+        <SignalArchDiagram />
       </motion.div>
     </section>
   )

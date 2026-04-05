@@ -4,7 +4,7 @@ import { ArrowDown } from 'lucide-react'
 const fade = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, delay, ease: 'easeOut' },
+  transition: { duration: 0.6, delay },
 })
 
 function scrollTo(id: string) {
@@ -29,26 +29,26 @@ export default function Hero() {
       </motion.h1>
 
       <motion.p className="hero-sub" {...fade(0.3)}>
-        A dual model deep reinforcement learning framework combining PPO-based Emergency
-        Vehicle lane change control with Multi Agent signal coordination across a 6 junction
-        urban grid simulated in SUMO.
+        A deep reinforcement learning framework combining PPO-based Emergency Vehicle
+        lane-change control with Multi-Agent signal coordination across a cross-junction
+        network. Models are trained and evaluated through custom simulation environments.
       </motion.p>
 
       <motion.div className="hero-cta" {...fade(0.4)}>
         <button onClick={() => scrollTo('drl')} className="btn-primary">
           Explore Models <ArrowDown size={16} />
         </button>
-        <button onClick={() => scrollTo('metrics')} className="btn-secondary">
-          View Results
+        <button onClick={() => scrollTo('qos')} className="btn-secondary">
+          View QoS Module
         </button>
       </motion.div>
 
       <motion.div className="hero-stats" {...fade(0.5)}>
         {[
-          { val: '1000', label: 'Training Epochs' },
-          { val: '6', label: 'Signal Agents' },
-          { val: '29-dim', label: 'State Space' },
+          { val: '4', label: 'Signal Agents' },
           { val: 'CTDE', label: 'MARL Paradigm' },
+          { val: 'PPO', label: 'RL Algorithm' },
+          { val: 'V2X', label: 'Communication' },
         ].map((s) => (
           <div className="hero-stat" key={s.label}>
             <div className="hero-stat-val">{s.val}</div>

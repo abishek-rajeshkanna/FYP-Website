@@ -1,31 +1,33 @@
 import { motion } from 'framer-motion'
 import { useInView } from '../hooks/useInView'
 import { Cpu, Network, Activity, GitBranch } from 'lucide-react'
+import SignalArchDiagram from './SignalArchDiagram'
+import OverallArchDiagram from './OverallArchDiagram'
 
 const cards = [
   {
     icon: <Cpu size={20} />,
     color: 'blue',
     title: 'DRL-PPO Lane Change',
-    desc: 'A Proximal Policy Optimization agent trained to guide an Emergency Vehicle through dense traffic by selecting optimal lane-change actions every 4 simulation steps.',
+    desc: 'A Proximal Policy Optimization agent trained to control Emergency Vehicle lane-change decisions, selecting from three lateral actions at each decision interval based on a 29-dimensional state observation.',
   },
   {
     icon: <Network size={20} />,
     color: 'green',
     title: 'MARL Signal Control',
-    desc: 'Six independent actor networks share a centralized critic (CTDE) to coordinate traffic signal phases across a 2×3 junction grid, prioritizing EV passage.',
+    desc: 'Four independent actor networks operating under Centralized Training, Decentralized Execution (CTDE) to coordinate traffic signal phases at a cross-junction, with EV proximity incorporated into each agent\'s local state.',
   },
   {
     icon: <Activity size={20} />,
     color: 'purple',
-    title: 'SUMO Simulation',
-    desc: 'Both models are trained and evaluated inside SUMO — a microscopic traffic simulator — with dynamic route generation producing randomized traffic demand each episode.',
+    title: 'Custom Simulation Environments',
+    desc: 'Both models are trained and evaluated through custom simulation environments built with PyGame, with dynamic traffic generation to improve policy generalization across varying traffic conditions.',
   },
   {
     icon: <GitBranch size={20} />,
     color: 'orange',
     title: 'Integrated Pipeline',
-    desc: 'The trained PPO model is loaded into the MARL training loop, enabling joint optimization where signal agents learn to cooperate with the EV lane-change policy.',
+    desc: 'The trained PPO model is loaded into the MARL training loop, enabling joint optimization where signal agents learn to coordinate with the EV lane-change policy in a shared environment.',
   },
 ]
 
@@ -40,10 +42,10 @@ export default function Overview() {
         transition={{ duration: 0.5 }}
       >
         <div className="section-label">System Overview</div>
-        <h2 className="section-title">Two Models, One Mission</h2>
+        <h2 className="section-title">Project Architecture</h2>
         <p className="section-desc">
-          The system tackles urban emergency response from two angles simultaneously —
-          the vehicle decides where to go, the grid decides when to let it through.
+          The system addresses urban emergency vehicle preemption through two complementary
+          reinforcement learning models operating within custom simulation environments.
         </p>
       </motion.div>
 
@@ -62,6 +64,20 @@ export default function Overview() {
           </motion.div>
         ))}
       </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.5, delay: 0.5 }}
+        style={{ marginTop: '3rem' }}
+      >
+        <div className="section-label">Module Architecture</div>
+        <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem' }}>Signal Control Module Architecture</h3>
+        <p className="section-desc" style={{ marginBottom: 0 }}>
+          End-to-end architecture from data acquisition through state representation to the MAPPO training core and simulation environment.
+        </p>
+        <OverallArchDiagram />
+      </motion.div>
     </section>
   )
 }

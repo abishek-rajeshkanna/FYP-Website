@@ -8,7 +8,7 @@ import Overview from './components/Overview'
 import DRLSection from './components/DRLSection'
 import MARLSection from './components/MARLSection'
 import Gallery from './components/Gallery'
-import Metrics from './components/Metrics'
+import QoSSection from './components/QoSSection'
 import TechStack from './components/TechStack'
 import Footer from './components/Footer'
 
@@ -32,7 +32,7 @@ export default function App() {
           <li><button className="nav-link-btn" onClick={() => scrollTo('drl')}>DRL-PPO</button></li>
           <li><button className="nav-link-btn" onClick={() => scrollTo('marl')}>MARL Signal</button></li>
           <li><button className="nav-link-btn" onClick={() => scrollTo('gallery')}>Screenshots and Output</button></li>
-          <li><button className="nav-link-btn" onClick={() => scrollTo('metrics')}>Results</button></li>
+          <li><button className="nav-link-btn" onClick={() => scrollTo('qos')}>QoS-V2X</button></li>
         </ul>
       </nav>
 
@@ -46,9 +46,8 @@ export default function App() {
       <div className="gallery-bg">
         <Gallery onOpen={setLightbox} />
       </div>
-      <div className="metrics-bg">
-        <Metrics />
-      </div>
+      <div className="divider" />
+      <QoSSection />
       <div className="divider" />
       <TechStack />
       <Footer />
